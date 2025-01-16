@@ -1,5 +1,5 @@
 # Ecommerce-Follow-Along
-### E-commerce app built from scratch using MERN stack
+### E-commerce app built from scratch using MERN stack.
 ---
 - This project will be built using MERN Stack.
 - REST API Creation: Through the mentor-guided project, you will learn to build scalable APIs.
