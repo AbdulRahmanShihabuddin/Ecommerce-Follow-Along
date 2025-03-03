@@ -51,13 +51,13 @@ const EditProductPage = () => {
           {
             method: "DELETE",
             headers: {
-              "Content-Type": "application/json"
-            }
+              "Content-Type": "application/json",
+            },
           }
         );
-  
+
         const data = await response.json();
-  
+
         if (response.ok) {
           alert("Product deleted successfully");
           navigate("/");

@@ -7,6 +7,10 @@ import EditProductPage from "./pages/EditProductPage";
 import NavBar from "./pages/NavBar";
 import ProductInfoPage from "./pages/ProductInfoPage";
 import CartPage from "./pages/CartPage";
+import Profile from "./pages/Profile";
+import SelectAddress from "./pages/SelectAddress";
+import OrderConfirmation from "./pages/OrderConfirmation";
+import OrderSuccess from "./pages/OrderSuccess";
 
 function App() {
   return (
@@ -21,8 +25,12 @@ function App() {
             <Route path="/edit-product/:id" element={<EditProductPage />} />
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/cart-page" element={<CartPage />} />
+            <Route path="/select-address" element={<SelectAddress />} />
+            <Route path="/order-confirmation" element={<OrderConfirmation />} />
+            <Route path="/order-success" element={<OrderSuccess />} />
           </Routes>
         </div>
       </div>

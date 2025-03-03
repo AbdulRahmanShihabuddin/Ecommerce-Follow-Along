@@ -145,7 +145,7 @@ In this milestone, we focused on implementing user authentication, including use
 
 - **Method**: POST
 - **URL**: `http://localhost:8080/signup`
-- **Headers**: 
+- **Headers**:
   - `Content-Type`: `application/json`
 - **Body** (raw JSON):
   ```json
@@ -154,8 +154,7 @@ In this milestone, we focused on implementing user authentication, including use
     "email": "admin@gmail.com",
     "password": "heyguys"
   }
-
-
+  ```
 
 # Milestone 8: Product Card Component and (styles with gpt)
 
@@ -166,6 +165,7 @@ Milestone 8 focuses on designing a reusable product card component and creating 
 ## Achievements 🎯
 
 ### 1. Reusable Product Card Component
+
 - Developed a flexible product card component using props to display dynamic product details.
 - Each card includes key information such as:
   - **Product Image**: A visually clear representation of the product.
@@ -174,6 +174,7 @@ Milestone 8 focuses on designing a reusable product card component and creating 
   - **Description**: A brief overview of the product.
 
 ### 2. Responsive Grid Layout
+
 - Designed a homepage layout using Tailwind CSS to arrange product cards in a neat, grid-based structure.
 - Ensured responsiveness for an optimal viewing experience across various devices:
   - **Small screens**: Displays cards in a single column.
@@ -183,6 +184,7 @@ Milestone 8 focuses on designing a reusable product card component and creating 
 ## Learning Goals 🌟
 
 By completing this milestone, the following objectives were achieved:
+
 - Understanding how to create and style reusable components in frontend development.
 - Learning to use Tailwind CSS to implement dynamic, responsive layouts.
 - Using array mapping to render multiple cards dynamically with unique product data.
@@ -203,6 +205,7 @@ In this milestone, we focused on creating a `ProductForm.jsx` component to handl
 ## Achievements 🎯
 
 ### 1. Product Form Component
+
 - Developed a `ProductForm.jsx` component to handle product data input.
 - The form includes fields for:
   - **Product Name**: Input field for the product's name.
@@ -212,15 +215,19 @@ In this milestone, we focused on creating a `ProductForm.jsx` component to handl
   - **Images**: File input for uploading product images.
 
 ### 2. State Management
+
 - Utilized React's `useState` hook to manage form data.
 - Implemented dynamic state updates using computed property names:
   ```jsx
   const handleInputChange = (e) => {
     setProductData({ ...productData, [e.target.name]: e.target.value });
   };
+  ```
+
 # Milestone 10: Product Schema and Endpoint Creation 🚀
 
 ### Learning Goals 🎯
+
 - Understand how to write a Mongoose schema for products.
 - Create an endpoint to validate and store product details in MongoDB.
 - Handle file uploads using `multer` and store image paths in the database.
@@ -228,15 +235,19 @@ In this milestone, we focused on creating a `ProductForm.jsx` component to handl
 ---
 
 ### Key Features Implemented 🛠️
+
 1. **Product Schema:**
+
    - Defined the structure for `Product` data, including fields like `name`, `description`, `price`, `category`, and `images`.
    - Added proper validation to ensure data integrity.
 
 2. **File Upload Handling:**
+
    - Configured `multer` to store uploaded images in the `uploads/` folder.
    - Images are saved with a unique timestamp-based naming convention.
 
 3. **Product Creation Endpoint:**
+
    - Created a `POST /createProduct` endpoint to receive product data.
    - Validated the data fields (`name`, `description`, `price`, `category`, and images).
    - Saved the product details and image paths to MongoDB.
@@ -247,5 +258,383 @@ In this milestone, we focused on creating a `ProductForm.jsx` component to handl
 
 ---
 
+# Milestone 11 - Display Products Dynamically
+
+## Overview 📌
+
+In this milestone, we made the home page dynamic by fetching product data from MongoDB and displaying it using the **Product Card** component.
+
+## What We Did 🔧
+
+### 1️⃣ Backend - Created an API Endpoint
+
+- We wrote an endpoint `/getProducts` in the backend to fetch all product data from MongoDB.
+- The endpoint retrieves product details, including name, description, price, category, and image URLs stored in the database.
+
+### 2️⃣ Storing Product Images
+
+- Images uploaded from the frontend are stored in the `uploads/` folder in the backend.
+- Only the image file path is stored in MongoDB.
+- We used `multer` for handling file uploads.
+
+### 3️⃣ Frontend - Fetching Data
+
+- We created a function in `ProductCardList` to fetch data from the backend using `fetch("http://localhost:8080/getProducts")`.
+- The response is stored in the `products` state using `useState()`.
+
+### 4️⃣ Displaying Products Dynamically
+
+- The fetched product data is mapped and passed to the **Product Card** component.
+- The image source is set dynamically using `product.images[0]` (assuming the first image).
+- The UI now updates automatically when new products are added to the database.
+
+# Milestone 12: Dynamic Product Display
+
+### Overview
+
+In this milestone, we have successfully implemented the feature to dynamically display products on the frontend based on the stored data in the backend.
+
+### Changes Implemented:
+
+1. **Server-Side Enhancements:**
+
+   - Created a new API endpoint (`/getProducts`) to fetch all products from the database.
+   - Used `Product.find()` to retrieve stored product details.
+   - Handled errors to ensure smooth API responses.
+
+2. **Client-Side Modifications:**
+   - Updated `ProductCardList` component to fetch product data from the backend.
+   - Used `useEffect` to make an API call and store the retrieved data in state (`setProducts`).
+   - Displayed products dynamically based on the fetched data.
+
+### Code Summary:
+
+#### **Backend (`server/routes/productRoutes.js`)**
+
+```js
+const express = require("express");
+const {
+  createProduct,
+  uploadImages,
+  getProducts,
+} = require("../controllers/productController");
+const router = express.Router();
+
+router.post("/createProduct", uploadImages, createProduct);
+router.get("/getProducts", getProducts);
+
+module.exports = router;
+```
+
+---
+
+# Milestone 13: Edit Uploaded Products
+
+## Overview
+
+In this milestone, we implemented the **Edit Product** functionality, allowing users to modify previously uploaded products. This involved:
+
+- Adding an **Edit** button to each product card.
+- Creating an **Edit Product Form** that auto-fills with existing product data.
+- Developing a **backend endpoint** to update product details in MongoDB.
+- Handling navigation between the product list and the edit form.
+
+---
+
+## 📌 Learning Goals
+
+By the end of this milestone, you will understand:
+
+- How to create an **update endpoint** in Express.js for modifying database entries.
+- How to **pre-fill form fields** with existing data for a seamless editing experience.
+- How to **send updated product data** from the frontend to the backend and update MongoDB.
+
+---
+
+## 🏗 Steps Implemented
+
+### 1️⃣ Backend: Create the Update Endpoint
+
+We added an endpoint to **fetch a single product** and another to **update product details** in MongoDB.
+
+#### ✅ **Fetch a Single Product**
+
+```javascript
+app.get("/getProduct/:id", async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+    res.json(product);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching product" });
+  }
+});
+```
+
+---
+
+# Milestone 14: Delete Product Functionality 🗑️
+
+## Overview
+
+In this milestone, we implemented the delete functionality for products, allowing users to remove products from the database. This feature enhances the product management system by providing a way to handle outdated or unwanted items.
+
+## 📌 Learning Goals
+
+- Understanding DELETE HTTP method implementation in Express.js
+- Handling confirmation dialogs for destructive actions
+- Managing state and navigation after successful deletions
+- Implementing proper error handling for delete operations
+
+## 🏗 Key Features Implemented
+
+### 1️⃣ Backend Development
+
+- Created a delete endpoint to remove products from MongoDB
+- Implemented proper error handling and status codes
+- Added validation to ensure product exists before deletion
+- Configured proper response messages for success/# Milestone 14: Delete Product Functionality 🗑️
+
+# Milestone 15: UI Improvements and Navbar Consistency
+
+In this milestone, we focused on:
+
+1. Unifying the color theme across the navbar and various pages.
+2. Ensuring the navbar remains on top with proper z-index.
+3. Adjusting layout and padding to fix scrolling issues on the Landing Page.
+
+These changes enhance the user experience by providing a consistent look and feel, improving navigation, and ensuring a responsive layout across different screen sizes.
+
+# 🛍️ Milestone 16: Product Info Page
+
+## 📌 Overview
+
+In this milestone, we create a **Product Info Page** that displays detailed product information, allows users to select a quantity, and provides an **"Add to Cart"** button.
+
+## 🎯 Learning Goals
+
+- Create a new page to display product details.
+- Implement a **quantity selector** to choose the number of items.
+- Add an **"Add to Cart"** button for users to save products.
+
+## 🛠️ Steps to Implement
+
+### 1️⃣ Create the Product Info Page
+
+- Fetch the product details using its **ID** from the backend.
+- Display the **product name, description, price, and images**.
+- Add an input field for **selecting quantity**.
+- Include an **"Add to Cart"** button.
+
+### 2️⃣ Add Routing for Product Info Page
+
+- Define a new route: `/product/:id`.
+- Ensure clicking **"View Details"** navigates to this page.
+
+### 3️⃣ Modify "View Details" Button
+
+- Update the **Product List** page to link each product to its detailed view.
+
+### ✅ Final Outcome
+
+- Users can click **"View Details"** to access full product details.
+- They can **select a quantity** before adding an item to the cart.
+- The **"Add to Cart"** button saves the selected item.
+
+🎉 **Milestone 16 is complete!**
+
+# ✅ Milestone 17 Completion Report
+
+## 🎯 Objective
+
+Implement the **Add to Cart** functionality in both the frontend and backend.
+
+## 📌 Tasks Completed
+
+- ✅ Created a **POST** endpoint `/addToCart/:productId` to add items to the cart.
+- ✅ Fetched `userEmail` from `localStorage` and included it while adding products to the cart.
+- ✅ Updated the **cart schema** to store user-specific cart items.
+- ✅ Ensured the cart items are stored correctly in **MongoDB**.
+- ✅ Successfully tested adding products to the cart.
+
+## 🚀 Outcome
+
+Users can now add products to their cart, and the data is stored in the database for future retrieval.
+
+# ✅ Milestone 18 Completion Report
+
+## 🎯 Objective
+
+Implement a backend endpoint to fetch all products inside a user's cart using their email.
+
+## 📌 Tasks Completed
+
+- ✅ Created a **GET** endpoint `/getCart` to fetch cart items for a user.
+- ✅ Modified the **cart schema** to associate items with `userEmail`.
+- ✅ Ensured the frontend retrieves `userEmail` from `localStorage` instead of headers.
+- ✅ Successfully tested **adding to cart** and fetching cart items via API.
+
+## 🚀 Outcome
+
+The cart functionality is now fully integrated, allowing users to view their cart items based on their email.
+
+# **Milestone 19: Progress Summary**
+
+## **1️⃣ Backend Setup**
+
+- ✅ **Folder Structure**: Organized into `controllers`, `routes`, `models`, etc.
+- ✅ **Database**: Using **MongoDB (with Mongoose)** for storing user and cart data.
+- ✅ **Authentication**: Implemented using **Supabase Auth**.
+- ✅ **API Endpoints**:
+  - `POST /addToCart/:productId` → Add items to the cart.
+  - `POST /removeFromCart/:productId` → Remove or decrease item quantity.
+  - `GET /getCart` → Fetch the user's cart.
+  - with quantity update adn delete cart item
+
+## **2️⃣ Frontend Setup**
+
+- ✅ **Framework**: React with functional components.
+- ✅ **State Management**: Using `useState` and `useEffect`.
+- ✅ **Cart Functionality**:
+  - **Add to Cart**: Works correctly, updates frontend and backend.
+  - **Increase Quantity**: Uses `addToCart` API and updates properly.
+  - **Decrease Quantity**: Uses `removeFromCart` API (currently under testing).
+  - **Fetch Cart**: Retrieves cart items on page load.
+
+# **Milestone 20: Progress Summary**
+
+## **1️⃣ Backend Setup**
+
+- ✅ **Folder Structure**: Maintained and extended existing structure (`controllers`, `routes`, `models`, etc.) for profile functionality.
+- ✅ **Database**: Using **MongoDB (with Mongoose)** to store and retrieve user `name` and `email`.
+- ✅ **API Endpoints**:
+  - `GET /getUserByEmail` → Fetches user profile data (name and email) based on `userEmail` query parameter, with error handling (404, 400, 500).
+
+## **2️⃣ Frontend Setup**
+
+- ✅ **Framework**: React with functional components.
+- ✅ **State Management**: Using `useState` and `useEffect` for profile data.
+- ✅ **Profile Functionality**:
+  - **Fetch Profile**: Retrieves and displays user `name` and `email` from backend.
+  - **Error Handling**: Manages loading states and errors (e.g., 404, 500).
+  - **Local Storage**: Uses `localStorage.getItem("userEmail")` for profile fetching.
 
 
+  # **Milestone 21: Progress Summary**
+
+## **1️⃣ Backend Setup**
+
+- ✅ **Endpoint Update**: Modified the **GET /getUserByEmail** endpoint to include the user’s `_id` in the response, ensuring the frontend can fetch profiles using the user’s ObjectId.
+  - **Input**: `userEmail` (e.g., `admin11@gmail.com`)
+  - **Output**: JSON response with `{ name, email, _id }` (e.g., `{"name": "admin", "email": "admin11@gmail.com", "_id": "someObjectId123"}`).
+  - **Changes**:
+    - Updated the response object in `getUserByEmail` to include `thisUser._id`.
+    - Maintained existing error handling (400 for missing email, 404 for user not found, 500 for server errors).
+  - **Purpose**: Enables the frontend to retrieve the user’s `_id` and use it to fetch the profile and addresses via the `/getProfile` endpoint.
+
+## **2️⃣ Frontend Setup**
+
+- ✅ **Profile Functionality**: Ensured the `Profile` component correctly fetches the user’s `_id` using `/getUserByEmail`, then uses it to query `/getProfile` to display stored addresses or show the "Add Address" button if no profile exists.
+  - **Improvements**:
+    - Added checks for `userEmail` in `localStorage` to prevent `undefined` errors.
+    - Used `encodeURIComponent` to handle special characters in `userEmail`.
+    - Maintained robust error handling and console debugging for tracking issues.
+  - **Outcome**: Resolved the 400 (Bad Request) error where `userId` was `undefined`, ensuring the profile page dynamically displays addresses or prompts for adding a new address.
+
+## **3️⃣ Key Achievements**
+
+- Successfully fixed the issue where the frontend couldn’t fetch profile data due to missing `_id` in the `/getUserByEmail` response.
+- Improved data consistency between backend and frontend, enabling seamless profile and address management.
+- Maintained the professional e-commerce styling and user experience with Tailwind CSS.
+
+# **Milestone 22: Progress Summary**
+
+## **1️⃣ Backend Setup**
+
+- ✅ **Endpoint**: Created **POST /api/v1/profile/addAddress** to save addresses in the user’s profile.
+  - **Input**: `userId` and `address` (e.g., `{ street, city, state, zipCode, country, addressType }`).
+  - **Output**: `{ success: true, profile }` or error (400, 404, 500).
+  - **Functionality**: Adds address to `addresses` array in `Profile` collection.
+
+## **2️⃣ Frontend Setup**
+
+- ✅ **Integration**: Updated `Profile` component to use `/addAddress` for saving addresses via the modal form.
+
+## **3️⃣ Key Achievements**
+
+- Implemented backend address storage, ensuring profile data persistence.
+- Maintained seamless frontend-backend integration for address management.
+
+# **Milestone 23: Progress Summary**
+
+
+
+- ✅ **Select Address Page**: Created a new `SelectAddress` component to display and select delivery addresses.
+  - **Features**:
+    - Added a "Place Order" button in the `Cart` component that navigates to `/select-address` with `userEmail` as a parameter (e.g., `/select-address?userEmail=${userEmail}`).
+    - Fetches all addresses for the user using `userEmail` to get `_id`, then queries `/api/v1/profile/getProfile?userId=${userId}`.
+    - Displays addresses in a list with radio buttons for selection, showing `street`, `city`, `state`, `zipCode`, `country`, and `addressType`.
+    - Includes a "Confirm Address" button to proceed to the order confirmation page, passing the selected address and `userEmail`.
+  - **Styling**: Used Tailwind CSS for a professional, responsive design (cards, buttons, lists).
+
+
+
+# **Milestone 24: Progress Summary**
+
+## **1️⃣ Frontend Setup**
+
+- ✅ **Select Address Page**: Built a `SelectAddress` component to display and select delivery addresses.
+  - Added a "Place Order" button in the `Cart` component, navigating to `/select-address?userEmail=${userEmail}`.
+  - Fetches addresses using `userEmail` to get `_id`, then queries `/api/v1/profile/getProfile`.
+  - Displays addresses with radio buttons for selection, including `street`, `city`, `state`, `zipCode`, `country`, and `addressType`.
+  - Includes a "Confirm Address" button to proceed to `/order-confirmation` with the selected address.
+
+## **2️⃣ Backend Setup**
+
+- ✅ **No Changes**: Leveraged existing endpoints (`/getUserByEmail`, `/getProfile`) for address retrieval.
+
+## **3️⃣ Key Achievements**
+
+- Created a user-friendly address selection page for order placement.
+- Integrated seamlessly with the cart and profile systems.
+
+# **Milestone 25: Progress Summary**
+
+## **1️⃣ Frontend Setup**
+
+- ✅ **Order Confirmation Page**: Developed an `OrderConfirmation` component to display order details.
+  - Displays cart products (name, quantity, price) fetched via `/getCart`.
+  - Shows the selected delivery address from `SelectAddress`.
+  - Displays the total cart value (subtotal).
+  - Includes a "Place Order" button to send order data to `/api/v1/orders/create`.
+
+## **2️⃣ Backend Setup**
+
+- ✅ **Order Endpoint**: Prepared for backend integration with `POST /api/v1/orders/create` to save orders (schema from Milestone 23).
+
+## **3️⃣ Key Achievements**
+
+- Built an order confirmation page for a seamless checkout experience.
+- Integrated cart, address, and order details for end-to-end order placement.
+
+# **Milestone 26: Progress Summary**
+
+## **1️⃣ Backend Setup**
+
+- ✅ **Endpoint Update**: Modified **GET /api/v1/orders/user-orders** to accept `userEmail` and retrieve user orders.
+  - **Input**: `userEmail` (e.g., `admin11@gmail.com`) as a query parameter.
+  - **Output**: `{ success: true, orders }` with all orders for the user, populated with product details, or error (400, 404, 500).
+  - **Changes**:
+    - Updated `getUserOrders` to fetch the user’s `_id` using `userEmail`, then retrieve orders using that `_id`.
+    - Maintained population of product details and sorting by `createdAt`.
+
+## **2️⃣ Frontend Setup**
+
+- ✅ **No Changes**: Leveraged existing `userEmail` from `localStorage` to call `/api/v1/orders/user-orders` for order history or user dashboards.
+
+## **3️⃣ Key Achievements**
+
+- Enabled fetching user orders using email, improving order history accessibility.
+- Ensured seamless integration with existing backend and frontend systems.

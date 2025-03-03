@@ -56,4 +56,35 @@ const getUsers = async (req, res) => {
     }
 };
 
-module.exports = { createUser, loginUser, getUsers };
+const getUserByEmail = async (req, res) => {
+    try {
+        const { userEmail } = req.query;
+
+        // Check if userEmail is provided
+        if (!userEmail) {
+            return res.status(400).json({ error: 'Email is required' });
+        }
+
+        // Find user by email (assuming 'user' is your MongoDB model)
+        const thisUser = await user.findOne({ email: userEmail });
+
+        // If no user is found, return a 404
+        if (!thisUser) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Return name, email, and _id
+        const userData = {
+            name: thisUser.name,
+            email: thisUser.email,
+            _id: thisUser._id, // Add the _id to the response
+        };
+
+        res.status(200).json(userData);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ error: 'Error fetching users' });
+    }
+};
+
+module.exports = { createUser, loginUser, getUsers,getUserByEmail };
