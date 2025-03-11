@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setEmail } from "../store/userActions";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -15,21 +18,17 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch(
-        "http://localhost:8080/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        }
-      );
+      const response = await fetch("https://ecommerce-zof6.onrender.com/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
       const data = await response.json();
 
       if (response.ok) {
         alert("Login successful!");
-        localStorage.setItem("userEmail", email);
-        localStorage.setItem("token", data.token);
+        dispatch(setEmail(email)); // Store email in Redux
         navigate("/"); // Redirect to products page
       } else {
         alert(data.error || "Login failed");

@@ -144,7 +144,7 @@ In this milestone, we focused on implementing user authentication, including use
 ### Signup Request
 
 - **Method**: POST
-- **URL**: `http://localhost:8080/signup`
+- **URL**: `https://ecommerce-zof6.onrender.com/signup`
 - **Headers**:
   - `Content-Type`: `application/json`
 - **Body** (raw JSON):
@@ -279,7 +279,7 @@ In this milestone, we made the home page dynamic by fetching product data from M
 
 ### 3️⃣ Frontend - Fetching Data
 
-- We created a function in `ProductCardList` to fetch data from the backend using `fetch("http://localhost:8080/getProducts")`.
+- We created a function in `ProductCardList` to fetch data from the backend using `fetch("https://ecommerce-zof6.onrender.com/getProducts")`.
 - The response is stored in the `products` state using `useState()`.
 
 ### 4️⃣ Displaying Products Dynamically
@@ -638,3 +638,156 @@ The cart functionality is now fully integrated, allowing users to view their car
 
 - Enabled fetching user orders using email, improving order history accessibility.
 - Ensured seamless integration with existing backend and frontend systems.
+
+# **Milestone 27: Progress Summary**
+
+## **1️⃣ Frontend Setup**
+
+- ✅ **My Orders Page**: Created a `MyOrders` component to display all user orders.
+  - Uses `userEmail` from `localStorage` to fetch `_id` via `/getUserByEmail`.
+  - Sends GET request to `/api/v1/orders/user-orders` with `_id` to retrieve orders.
+  - Displays orders with details (ID, status, date, products, address, total) in a responsive, styled list.
+  - Added loading, error, and no-orders states with retry and navigation options.
+  - Integrated `MyOrders` link in the navbar for navigation.
+
+## **2️⃣ Backend Setup**
+
+- ✅ **No Changes**: Leveraged existing **GET /api/v1/orders/user-orders** endpoint to fetch user orders using `_id`.
+
+## **3️⃣ Key Achievements**
+
+- Built a user-friendly order history page for viewing past orders.
+- Enhanced navigation with a dedicated “My Orders” link in the navbar.
+
+# **Milestone 28: Progress Summary**
+
+## **1️⃣ Frontend Setup**
+
+- ✅ **My Orders Page Update**: Enhanced the `MyOrders` component to include a "Cancel Order" button for each order.
+  - Added the button for non-canceled orders (e.g., `pending`, `shipped`, `delivered`), hidden for canceled orders.
+  - Implemented cancellation logic via a PUT request to `/api/v1/orders/cancel/:orderId`, updating the UI dynamically.
+
+## **2️⃣ Backend Setup**
+
+- ✅ **Cancel Endpoint**: Created **PUT /api/v1/orders/cancel/:orderId** in `orderController.js` and `orderRoutes.js`.
+  - Accepts `orderId` as a parameter, checks if the order exists and isn’t already canceled, then updates `status` to `cancelled`.
+  - Returns `{ success: true, message: "Order canceled successfully" }` or appropriate errors (400, 404, 500).
+
+## **3️⃣ Key Achievements**
+
+- Enabled users to cancel placed orders directly from the `MyOrders` page.
+- Ensured seamless integration between frontend and backend for order cancellation.
+
+# **Milestone 29: Progress Summary**
+
+## **1️⃣ Frontend Setup**
+
+- ✅ **Order Confirmation Update**: Modified `OrderConfirmation` component to include navigation to a payment options page.
+  - Added logic to navigate to `/payment-options` when "Place Order" is clicked.
+  - Passes order details (`userEmail`, `cartItems`, `subtotal`, `selectedAddress`) as state for the next page.
+  - Maintained existing styling and structure, deferring payment method selection to a new page.
+
+## **2️⃣ Backend Setup**
+
+- ✅ **No Changes**: Leveraged existing endpoints (`/getUserByEmail`, `/getCart`, `/api/v1/orders/create`) for order preparation.
+
+## **3️⃣ Key Achievements**
+
+- Prepared `OrderConfirmation` to transition to a dedicated payment options page.
+- Ensured seamless data transfer for payment processing in the next milestone.
+
+# **Milestone 30: Progress Summary**
+
+## **1️⃣ Frontend Setup**
+
+- ✅ **Payment Options Page**: Created a `PaymentOptions` component to handle payment methods.
+  - Receives order details (`userEmail`, `cartItems`, `subtotal`, `selectedAddress`) from `OrderConfirmation` via `useLocation`.
+  - Added radio buttons for "Cash on Delivery (COD)" and "Online Payment" selection.
+  - Integrated PayPal payments using `@paypal/react-paypal-js` (`PayPalScriptProvider`, `PayPalButtons`) for Online Payment.
+  - Saves the order via `/api/v1/orders/create` after successful payment (PayPal or COD).
+  - Navigates to `/order-success` after order placement with a 5-second delay.
+
+## **2️⃣ Backend Setup**
+
+- ✅ **No Changes**: Leveraged existing `/getUserByEmail` and `/api/v1/orders/create` endpoints for order placement.
+
+## **3️⃣ Key Achievements**
+
+- Implemented PayPal payment integration for online payments in the sandbox environment.
+- Enabled COD and Online Payment options with seamless order placement.
+
+# **Milestone 31: Progress Summary**
+
+## **1️⃣ Frontend Setup**
+
+- ✅ **Redux Installation**: Installed the `react-redux` npm package for global state management.
+- ✅ **Store Folder Creation**: Created a `store` folder in the `client` directory with `store.js` and `userActions.js` files.
+- ✅ **Global State Configuration**: Configured a Redux store in `store.js` with a `userReducer` to manage the user’s email state.
+- ✅ **Action Creator**: Defined a `setEmail` function in `userActions.js` to update the email in the global state.
+- ✅ **Provider Integration**: Wrapped the `App` component with the `Provider` component in `main.jsx`, passing the store as a prop.
+
+## **2️⃣ Backend Setup**
+
+- ✅ **No Changes**: Leveraged existing frontend structure without backend modifications.
+
+## **3️⃣ Key Achievements**
+
+- Successfully set up Redux to manage the user’s email as a global state, accessible across components like `OrderConfirmation`, `PaymentOptions`, and `MyOrders`.
+- Established a foundation for centralized state management in the e-commerce application.
+
+# **Milestone 32: Progress Summary**
+
+## **1️⃣ Frontend Setup**
+
+- ✅ **Dispatch Email in Login**: Updated the `Login` page to use `useDispatch` from `react-redux` to dispatch the `setEmail` action, storing the user’s email in the global state after a successful login.
+- ✅ **Access Email with useSelector**: Modified `OrderConfirmation`, `PaymentOptions`, and `MyOrders` pages to access the user’s email from the Redux store using `useSelector`, replacing previous methods (`localStorage`, URL params, or navigation state).
+- ✅ **Removed Redundant Email Storage**: Removed `localStorage` usage for storing the email in `Login` and other pages, relying entirely on Redux for email management.
+
+## **2️⃣ Backend Setup**
+
+- ✅ **No Changes**: Leveraged existing endpoints (`/login`, `/getCart`, `/getUserByEmail`, `/api/v1/orders/create`) without modifications.
+
+## **3️⃣ Key Achievements**
+
+- Successfully used Redux to store and access the user’s email across the application, ensuring consistent state management.
+- Eliminated dependency on `localStorage` and URL params for email access, improving security and maintainability.
+
+# **Milestone 32: Progress Summary**
+
+## **1️⃣ Frontend Setup**
+
+- ✅ **Dispatch Email in Login**: Updated the `Login` page to use `useDispatch` to dispatch the `setEmail` action, storing the user’s email in the Redux global state upon successful login.
+- ✅ **Access Email with useSelector**: Modified pages to retrieve the email from the Redux store using `useSelector`:
+  - Updated `OrderConfirmation` to replace `searchParams.get("userEmail")` with `useSelector((state) => state.user.email)`, adding a redirect to `/login` if the email is `null`.
+  - Ensured `PaymentOptions` and `MyOrders` (previously updated) also use `useSelector` for email access.
+- ✅ **Removed Redundant Storage**: Eliminated `localStorage` usage for email in `Login` and replaced it with Redux, retaining `localStorage` for the token.
+
+## **2️⃣ Backend Setup**
+
+- ✅ **No Changes**: Continued using existing endpoints (`/login`, `/getCart`, `/getUserByEmail`, `/api/v1/orders/create`) without modifications.
+
+## **3️⃣ Key Achievements**
+
+- Successfully implemented Redux to manage and access the user’s email across the application, enhancing state consistency.
+- Added authentication checks in `OrderConfirmation` to redirect unauthenticated users to the login page.
+- Improved security and maintainability by centralizing email management in Redux.
+
+# **Milestone 33: Progress Summary**
+
+## **1️⃣ Frontend Setup**
+
+- ✅ **Updated Login Page**: Modified `Login.jsx` to remove `localStorage.setItem` for both `userEmail` and `token`, relying on Redux (`setEmail`) and the backend-sent cookie (`authToken`).
+- ✅ **No Additional Changes**: Ensured compatibility with the new backend cookie-based authentication.
+
+## **2️⃣ Backend Setup**
+
+- ✅ **Installed jsonwebtoken**: Added the `jsonwebtoken` package to the server using NPM.
+- ✅ **JWT Token Creation**: Updated `loginUser` in `userController.js` to use `jwt.sign` to create a token with `email` and `_id`, signed with `process.env.JWT_SECRET` or a fallback secret.
+- ✅ **Set Expiration Time**: Configured the token with `expiresIn: "1h"` and set `maxAge: 3600000` (1 hour) for the cookie.
+- ✅ **Added Cookie to Response**: Implemented `res.cookie` to send the `authToken` with `httpOnly`, `secure` (in production), and `sameSite: "strict"` options for security.
+
+## **3️⃣ Key Achievements**
+
+- Successfully implemented JWT-based authentication, storing the token securely as a cookie instead of `localStorage`.
+- Centralized email management in Redux, removing redundant `localStorage` usage.
+- Enhanced security with `httpOnly` cookies to prevent client-side access.

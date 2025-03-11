@@ -28,7 +28,7 @@ function CartPage() {
 
       try {
         const res = await fetch(
-          `http://localhost:8080/getCart?userEmail=${userEmail}`
+          `https://ecommerce-zof6.onrender.com/getCart?userEmail=${userEmail}`
         );
 
         if (!res.ok) {
@@ -36,6 +36,8 @@ function CartPage() {
         }
 
         const data = await res.json();
+        console.log("Fetched cart items:", data);
+
         setCartItems(data.cart || []);
 
         // Calculate subtotal
@@ -57,7 +59,7 @@ function CartPage() {
 
     try {
       const res = await fetch(
-        "http://localhost:8080/updateCart",
+        "https://ecommerce-zof6.onrender.com/updateCart",
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -95,7 +97,7 @@ function CartPage() {
   const removeFromCart = async (productId) => {
     try {
       const res = await fetch(
-        "http://localhost:8080/removeFromCart",
+        "https://ecommerce-zof6.onrender.com/removeFromCart",
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },

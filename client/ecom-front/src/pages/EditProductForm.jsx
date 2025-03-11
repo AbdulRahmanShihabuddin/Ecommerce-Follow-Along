@@ -16,7 +16,7 @@ const EditProductForm = ({ product, onUpdate, onCancel }) => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `http://localhost:8080/updateProduct/${product._id}`,
+        `https://ecommerce-zof6.onrender.com/updateProduct/${product._id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

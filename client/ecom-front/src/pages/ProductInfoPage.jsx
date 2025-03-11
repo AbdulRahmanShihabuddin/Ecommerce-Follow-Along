@@ -10,7 +10,7 @@ const ProductInfoPage = () => {
     const fetchProduct = async () => {
       try {
         const res = await fetch(
-          `http://localhost:8080/getProduct/${id}`
+          `https://ecommerce-zof6.onrender.com/getProduct/${id}`
         );
         const data = await res.json();
         setProduct(data);
@@ -28,7 +28,7 @@ const ProductInfoPage = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:8080/addToCart/${productId}`,
+        `https://ecommerce-zof6.onrender.com/addToCart/${productId}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -54,7 +54,7 @@ const ProductInfoPage = () => {
   //   }
 
   //   try {
-  //     const res = await fetch(`http://localhost:8080/addToCart/${productId}`, {
+  //     const res = await fetch(`https://ecommerce-zof6.onrender.com/addToCart/${productId}`, {
   //       method: "POST",
   //       headers: { "Content-Type": "application/json" },
   //       body: JSON.stringify({ userEmail, quantity }), // Send userEmail in body
